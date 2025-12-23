@@ -1,130 +1,184 @@
-# Trade Opportunities API
+#Documentation
 
-The **Trade Opportunities API** is a Python-based web service built using **FastAPI** that provides real-time trade opportunities data. The API is designed to help users fetch, filter, and analyze trade data securely, making it easy to integrate into trading dashboards or analytics tools.
+Trade Opportunities API (AI‑Powered Market Analysis)
 
----
+A secure, rate-limited **FastAPI** application that uses **Google Gemini AI** to generate intelligent market analysis reports for different business sectors.
 
-## Project Overview
+This project focuses on:
 
-This project fetches trade data from the Gemini API and exposes it via a RESTful interface. It supports:
-
-- Secure access using an API key
-- Fetching trade opportunities for different trading symbols
-- Filtering and sorting data based on criteria like price, volume, and symbol
-- Easy testing and exploration of endpoints through built-in Swagger UI
-
-The goal of the project is to demonstrate backend API development skills, handling real-world data, and providing secure and structured access to trading information.
+* Clean architecture
+* API security
+* AI integration
+* Real-world backend practices
 
 ---
 
 ## Key Features
 
-1. **API Key Authentication**:  
-   Only authorized users with a valid API key can access the endpoints.
+*  **API Key Authentication** (Header-based)
+*  **Rate Limiting** using SlowAPI
+*  **AI-Powered Market Analysis** via Google Gemini
+*  **Auto-generated Reports** (Text output)
+*  **Swagger UI** for easy testing
+*  Modular & Scalable Project Structure
 
-2. **Trade Data Endpoints**:  
-   - Fetch all trade opportunities  
-   - Filter by symbol, price range, or volume  
-   - Sort results based on trading metrics
+---
 
-3. **JSON Responses**:  
-   All endpoints return structured JSON, making it easy to integrate with frontend dashboards or analytics tools.
+## Tech Stack
 
-4. **Swagger UI Documentation**:  
-   Automatically generated API documentation available at `/docs`.
-
-5. **Secure Configuration**:  
-   API keys and sensitive information are stored in a `.env` file and loaded using environment variables.
+| Layer         | Technology                          |
+| ------------- | ----------------------------------- |
+| Backend       | FastAPI                             |
+| AI            | Google Gemini (google-generativeai) |
+| Security      | API Key Authentication              |
+| Rate Limiting | SlowAPI                             |
+| Environment   | python-dotenv                       |
+| Server        | Uvicorn                             |
 
 ---
 
 ## Project Structure
 
+```
 trade-opportunities-api/
 │
-├─ main.py # Entry point for FastAPI server
-├─ config.py # Loads environment variables and API keys
-├─ requirements.txt # Python dependencies
-├─ routes/ # API route definitions
-├─ services/ # Functions for fetching and processing trade data
-├─ utils/ # Helper functions
-└─ .env # Environment variables (not pushed to GitHub)
-
-yaml
-Copy code
-
----
-
-## How It Works
-
-1. **API Key Verification**:  
-   Each request to the API must include a valid `x-api-key` header. Requests without a valid key are rejected.
-
-2. **Fetching Trade Data**:  
-   The API fetches live trade data from Gemini (or other configured sources).  
-
-3. **Processing & Filtering**:  
-   Users can filter by trading symbol, price thresholds, or volume to identify potential opportunities.
-
-4. **JSON Response**:  
-   Processed trade opportunities are returned in JSON format with relevant fields like `symbol`, `price`, and `volume`.
-
-5. **API Documentation**:  
-   FastAPI automatically generates Swagger UI, where users can test all endpoints interactively.
+├── main.py                # FastAPI app entry point
+├── auth.py                # API key authentication
+├── config.py              # Environment & settings loader
+├── rate_limiter.py        # Rate limiting logic
+├── models.py              # Request/response models
+│
+├── services/
+│   ├── ai_analysis.py     # Gemini AI integration
+│   ├── service.py         # Business logic layer
+│   └── report.py          # Report formatting
+│
+├── .env                   # Environment variables
+├── requirements.txt       # Dependencies
+└── README.md              # Documentation
+```
 
 ---
 
-## Example Endpoint
+## Environment Variables (.env)
 
-**GET /trades**  
-Headers: `x-api-key: <your_api_key>`  
-
-**Example Response:**
-
-```json
-[
-  {
-    "symbol": "BTCUSD",
-    "price": 50000,
-    "volume": 120
-  },
-  {
-    "symbol": "ETHUSD",
-    "price": 3500,
-    "volume": 300
-  }
-]
-Technologies Used
-Python 3.x – Programming language
-
-FastAPI – Web framework for building REST APIs
-
-Uvicorn – ASGI server for running the app
-
-Pandas – For data handling and processing
-
-dotenv – For managing environment variables
-
-Advantages of This Project
-Lightweight and fast API with real-time data access
-
-Secure API key authentication
-
-Easy to extend with additional trading metrics or sources
-
-Ready for integration with frontend dashboards or analytics tools
-
-Author
-Atchuth Srinivas
-Demonstrates backend API development, data handling, and secure configuration using Python and FastAPI.
-
-yaml
-Copy code
+```
+GEMINI_API_KEY=your_gemini_api_key_here
+API_KEY=test-key
+RATE_LIMIT=5/minute
+```
 
 ---
 
-This **README explains the project, its functionality, structure, and features** clearly for a reviewer, all in one block for easy copy-paste.  
+## Installation & Setup
 
-If you want, I can also **add a “Workflow Diagram + Example Output” section** to make it **even more visually impressive** for the reviewer.  
+```
+git clone https://github.com/your-username/trade-opportunities-api.git
+cd trade-opportunities-api
+python -m venv venv
+venv\Scripts\activate   # Windows
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
 
-Do you want me to do that?
+Server URL:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+## Swagger API Documentation
+
+```
+http://127.0.0.1:8000/docs
+```
+
+Provides interactive testing, headers, parameters, and real-time responses.
+
+---
+
+## How to Test the API
+
+### Endpoint
+
+```
+GET /analyze/{sector}
+```
+
+### Example
+
+```
+/analyze/technology
+```
+
+### Required Header
+
+| Header Name | Value    |
+| ----------- | -------- |
+| x-api-key   | test-key |
+
+### Sample Response
+
+```
+Market Analysis Report: Technology
+
+## Sector Overview
+The technology sector continues to evolve rapidly with strong innovation momentum.
+
+## Key Trends
+- Artificial Intelligence & Automation
+- Cloud Computing
+- Cybersecurity growth
+
+## Opportunities
+- AI-driven SaaS products
+- Enterprise automation
+
+## Risks
+- Market saturation
+- Regulatory challenges
+
+*Generated by Trade Opportunities API*
+```
+
+---
+
+## Rate Limiting
+
+* 5 requests per minute per IP
+* Excess requests return:
+
+```
+429 Too Many Requests
+```
+
+---
+
+## Security Implementation
+
+* API access protected using **API key authentication**
+* Unauthorized requests return:
+
+```
+{"detail": "Invalid or missing API Key"}
+```
+
+---
+
+## Project Significance
+
+Demonstrates:
+
+* Real-world backend API design
+* AI service integration
+* Secure & scalable architecture
+* Production-ready FastAPI practices
+
+---
+
+## 👤 Author
+
+**Atchuth Srinivas**
+B.Tech – Computer Science (AI & DS)
